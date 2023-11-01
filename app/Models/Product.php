@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Product extends Model
+class Product extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
     protected $fillable = [
         'name',
@@ -15,4 +17,15 @@ class Product extends Model
         'image',
         'description',
     ];
+
+    public function storeImage($file)
+    {
+        $this->addMedia($file)
+            ->toMediaCollection('productos'); // Asegúrate de que coincida con el nombre de tu colección
+    }
+
+    public function images()
+    {
+        return $this->media('productos');
+    }
 }
